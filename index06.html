@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>即時用電顯示</title>
+  <style>
+    body {
+      background: #000;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      text-align: center;
+    }
+    #power {
+      font-size: 8em;   /* 數字很大 */
+      font-weight: bold;
+      color: #00ff00;   /* 預設綠色 */
+      transition: color 0.5s ease; /* 平滑變色 */
+    }
+    #time {
+      font-size: 2em;   /* 時間小一點 */
+      color: #aaa;
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+  <div id="power">讀取中...</div>
+  <div id="time"></div>
+
+  <script>
+    function fetchPower() {
+      var xhr = new XMLHttpRequest();
+      xhr.open("GET", "power.json?_=" + new Date().getTime(), true);
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4) {
+          if (xhr.status === 200) {
+            try {
+              var data = JSON.parse(xhr.responseText);
+              var power = data.power;
+
+              var powerElement = document.getElementById("power");
+              powerElement.textContent = power + " kW";
+
+              // 紅綠判斷
+              if (power >= 1500) {
+                powerElement.style.color = "#ff3333"; // 紅色
+              } else {
+                powerElement.style.color = "#00ff00"; // 綠色
+              }
+
+              var now = new Date();
+              document.getElementById("time").textContent =
+                "更新時間：" + now.toLocaleTimeString();
+            } catch (e) {
+              document.getElementById("power").textContent = "❌ 資料解析錯誤";
+            }
+          } else {
+            document.getElementById("power").textContent = "❌ 資料讀取失敗";
+          }
+        }
+      };
+      xhr.send();
+    }
+
+    fetchPower();                 // 先載入一次
+    setInterval(fetchPower, 60000); // 每分鐘更新一次
+  </script>
+</body>
+</html>
