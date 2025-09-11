@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>即時用電顯示</title>
+  <style>
+    body {
+      background: #000;
+      color: #00ffcc;
+      font-size: 4em;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      flex-direction: column;
+    }
+    #power {
+      text-align: center;
+    }
+    #time {
+      font-size: 0.5em;
+      color: #aaa;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div id="power">讀取中...</div>
+  <div id="time"></div>
+
+<script>
+  function fetchPower() {
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "https://chingjuchang-ux.github.io/dds-power/power.json?_=" + new Date().getTime(), true);
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          try {
+            var data = JSON.parse(xhr.responseText);
+            document.getElementById("power").textContent =
+              "目前用電：" + data.power + " kW";
+
+            var now = new Date();
+            document.getElementById("time").textContent =
+              "更新時間：" + now.toLocaleTimeString();
+          } catch (e) {
+            document.getElementById("power").textContent = "❌ 資料解析錯誤";
+          }
+        } else {
+          document.getElementById("power").textContent = "❌ 資料讀取失敗";
+        }
+      }
+    };
+    xhr.send();
+  }
+
+  // 先載入一次
+  fetchPower();
+  // 每分鐘更新一次
+  setInterval(fetchPower, 60000);
+</script>
+</body>
+
+</html>
