@@ -33,7 +33,7 @@
 <script>
   function fetchPower() {
     var xhr = new XMLHttpRequest();
-    xhr.open("GET", "power.json?_=" + new Date().getTime(), true);
+    xhr.open("GET", "https://chingjuchang-ux.github.io/dds-power/power.json?_=" + new Date().getTime(), true);
     xhr.onreadystatechange = function() {
       if (xhr.readyState === 4) {
         if (xhr.status === 200) {
@@ -62,4 +62,5 @@
   setInterval(fetchPower, 60000);
 </script>
 </body>
+
 </html>
