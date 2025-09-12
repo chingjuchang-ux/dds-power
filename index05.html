@@ -85,7 +85,7 @@
 <script>
   function fetchPower() {
     var xhr = new XMLHttpRequest();
-    xhr.open("GET", "power.json?_=" + new Date().getTime(), true); // 加亂數避免快取
+    xhr.open("GET", "https://chingjuchang-ux.github.io/dds-power/power.json?_=" + new Date().getTime(), true); // 加亂數避免快取
     xhr.onreadystatechange = function() {
       if (xhr.readyState !== 4) return;
 
@@ -159,6 +159,7 @@
 </html>
 
 </html>
+
 
 
 
