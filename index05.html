@@ -114,6 +114,7 @@
 
           // 顯示 last_update（若有），否則顯示現在時間
           if (data.last_update) {
+            var now = new Date(); // 09.22新增為測試可刪
             timeEl.textContent = "更新時間：" + data.last_update + now.toLocaleTimeString();
           } else {
             var now = new Date();
@@ -159,6 +160,7 @@
 </html>
 
 </html>
+
 
 
 
