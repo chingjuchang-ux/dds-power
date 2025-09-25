@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>即時用電看板</title>
+  <style>
+    body {
+      background: #000;
+      color: #00ffcc;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: row; /* 左右排列 */
+      align-items: center;
+      justify-content: center;
+    }
+    .left {
+      flex: 1;
+      text-align: center;
+    }
+    #power {
+      font-size: 4em;
+    }
+    #time {
+      font-size: 1em;
+      color: #aaa;
+      margin-top: 20px;
+    }
+    .right {
+      flex: 2;
+      padding: 20px;
+    }
+    canvas {
+      width: 100%;
+      height: 80%;
+    }
+  </style>
+</head>
+<body>
+  <div class="left">
+    <div id="power">讀取中...</div>
+    <div id="time"></div>
+  </div>
+
+  <div class="right">
+    <canvas id="powerChart"></canvas>
+  </div>
+
+  <!-- 載入 Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    let chart;
+
+    function fetchPower() {
+      const xhr = new XMLHttpRequest();
+      xhr.open("GET", "power.json?_=" + new Date().getTime(), true);
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          try {
+            const data = JSON.parse(xhr.responseText);
+            // 更新左邊數字
+            document.getElementById("power").textContent =
+              "目前用電：" + data.latest + " kW";
+
+            const now = new Date();
+            document.getElementById("time").textContent =
+              "更新時間：" + now.toLocaleTimeString();
+
+            // 取出時間與功率
+            const labels = data.history.map(d => new Date(d.time).toLocaleTimeString());
+            const values = data.history.map(d => d.power);
+
+            if (!chart) {
+              // 初次建立圖表
+              const ctx = document.getElementById("powerChart").getContext("2d");
+              chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                  labels: labels,
+                  datasets: [{
+                    label: '即時用電 (kW)',
+                    data: values,
+                    borderColor: '#00ffcc',
+                    backgroundColor: 'rgba(0,255,204,0.2)',
+                    tension: 0.2,
+                    pointRadius: 0
+                  }]
+                },
+                options: {
+                  scales: {
+                    x: { ticks: { color: '#aaa' } },
+                    y: { ticks: { color: '#aaa' } }
+                  },
+                  plugins: {
+                    legend: { labels: { color: '#aaa' } }
+                  }
+                }
+              });
+            } else {
+              // 更新資料
+              chart.data.labels = labels;
+              chart.data.datasets[0].data = values;
+              chart.update();
+            }
+          } catch (e) {
+            document.getElementById("power").textContent = "❌ 資料解析錯誤";
+          }
+        }
+      };
+      xhr.send();
+    }
+
+    fetchPower();
+    setInterval(fetchPower, 60000); // 每分鐘更新一次
+  </script>
+</body>
+</html>
