@@ -39,7 +39,7 @@
 
     /* 數字 */
     #power {
-      font-size: 4em;      /* 大字體 */
+      font-size: 8em;      /* 大字體 */
       font-weight: bold;
       color: #00bb00;      /* 預設綠色 */
       text-align: center;
@@ -101,7 +101,8 @@
 
           // 更新數字（如果有）
           if (data.power !== undefined && data.power !== null) {
-            powerEl.textContent = "目前用電：" + data.power + " kW";
+            // powerEl.textContent = "目前用電：" + data.power + " kW";
+            powerEl.textContent = data.power + " kW";
 
             // 顏色警示（閾值可調整）
             if (data.power >= 3000) {
@@ -159,6 +160,7 @@
 </script>
 </body>
 </html>
+
 
 
 
