@@ -38,7 +38,7 @@
     }
 
     /* 數字 */
-    #power {
+    power {
       font-size: 8em;      /* 大字體 */
       font-weight: bold;
       color: #00ff00;      /* 預設綠色 */
@@ -48,7 +48,7 @@
     }
 
     /* 時間小一點 */
-    #time {
+    time {
       font-size: 1.2em;
       color: #aaa;
       margin-top: 10px;
@@ -66,7 +66,7 @@
     /* 若螢幕很窄（保護性），改為上下排列 */
     @media (max-width: 600px) {
       .container { flex-direction: column; }
-      #power { font-size: 4em; }
+      power { font-size: 4em; }
     }
   </style>
 </head>
@@ -102,7 +102,7 @@
             powerEl.textContent = "目前用電：" + data.power + " kW";
 
             // 顏色警示（閾值可調整）
-            if (data.power >= 50000) {
+            if (data.power >= 3000) {
               powerEl.style.color = "#ff3333"; // 紅色
             } else {
               powerEl.style.color = "#00ff00"; // 綠色
@@ -114,8 +114,7 @@
 
           // 顯示 last_update（若有），否則顯示現在時間
           if (data.last_update) {
-            var now = new Date(); // 09.22新增為測試可刪
-            timeEl.textContent = "更新時間：" + data.last_update + " " + now.toLocaleTimeString();
+            timeEl.textContent = "更新時間：" + data.last_update;
           } else {
             var now = new Date();
             timeEl.textContent = "更新時間：" + now.toLocaleTimeString();
@@ -158,20 +157,3 @@
 </script>
 </body>
 </html>
-
-</html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
