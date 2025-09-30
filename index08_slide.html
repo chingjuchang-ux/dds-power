@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>電力顯示</title>
+  <style>
+    #power {
+      font-size: 24px;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .fade-slide-out {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+
+    .fade-slide-in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    #time {
+      font-size: 14px;
+      color: gray;
+    }
+  </style>
+</head>
+<body>
+  <div id="power">目前用電：-- kW</div>
+  <div id="time">更新時間：--:--</div>
+
+  <script>
+    function fetchPower() {
+      var xhr = new XMLHttpRequest();
+      xhr.open("GET", "power.json?_=" + new Date().getTime(), true);
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4) {
+          var powerEl = document.getElementById("power");
+          var timeEl = document.getElementById("time");
+
+          if (xhr.status === 200) {
+            try {
+              var data = JSON.parse(xhr.responseText);
+
+              // 動畫：先滑出
+              powerEl.classList.add("fade-slide-out");
+
+              setTimeout(function() {
+                powerEl.textContent = "目前用電：" + data.power + " kW";
+
+                // 更新時間
+                var now = new Date();
+                timeEl.textContent = "更新時間：" + now.toLocaleTimeString();
+
+                // 滑入
+                powerEl.classList.remove("fade-slide-out");
+                powerEl.classList.add("fade-slide-in");
+
+                // 清除動畫類別以便下次觸發
+                setTimeout(function() {
+                  powerEl.classList.remove("fade-slide-in");
+                }, 500);
+              }, 300);
+            } catch (e) {
+              powerEl.textContent = "❌ 資料解析錯誤";
+            }
+          } else {
+            powerEl.textContent = "❌ 資料讀取失敗";
+          }
+        }
+      };
+      xhr.send();
+    }
+
+    // 每 5 秒更新一次
+    setInterval(fetchPower, 5000);
+    fetchPower(); // 初始載入
+  </script>
+</body>
+</html>
