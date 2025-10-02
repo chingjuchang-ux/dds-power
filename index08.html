@@ -112,9 +112,9 @@
 
             // 顏色警示（閾值可調整）
             if (data.power >= 3000) {
-              powerEl.style.color = "#ff3333"; // 紅色
+              powerEl.style.color = "#ff0000"; // 紅色
             } else {
-              powerEl.style.color = "#00bb00"; // 綠色
+              powerEl.style.color = "#000000"; // 綠色
             }
           } else {
             powerEl.textContent = "無用電資料";
@@ -128,15 +128,6 @@
             var now = new Date();
             timeEl.textContent = "更新時間：" + now.toLocaleTimeString();
           }
-
-          // 滑入
-          powerEl.classList.remove("fade-slide-out");
-          powerEl.classList.add("fade-slide-in");
-
-          // 清除動畫類別以便下次觸發
-          setTimeout(function() {
-            powerEl.classList.remove("fade-slide-in");
-          }, 500);
 
           // 圖片：若有 chart_url 則顯示並加上亂數避免快取；否則隱藏
           var chartUrl = "";
@@ -175,6 +166,7 @@
 </script>
 </body>
 </html>
+
 
 
 
