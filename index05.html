@@ -4,6 +4,14 @@
 <head>
   <meta charset="UTF-8">
   <title>即時用電顯示</title>
+  <script>
+  (function() {
+    if (!location.search) {
+      const today = new Date().toISOString().slice(0,10).replace(/-/g,"");
+      location.href = location.pathname + "?v=" + today;
+    }
+  })();
+  </script>
   <style>
     /* 基本頁面樣式 */
     body {
@@ -172,6 +180,7 @@
 </script>
 </body>
 </html>
+
 
 
 
