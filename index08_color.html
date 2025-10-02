@@ -1,0 +1,216 @@
+
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>即時用電顯示</title>
+  <script>
+  (function() {
+    if (!location.search) {
+      const today = new Date().toISOString().slice(0,10).replace(/-/g,"");
+      location.href = location.pathname + "?v=" + today;
+    }
+  })();
+  </script>
+  <style>
+    /* 基本頁面樣式 */
+    body {
+      background: #fff;
+      color: #000000;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      width: 1920px;     /* 固定寬度 */
+      height: 120px;     /* 固定高度 */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;  /* 防止內容超出 */
+    }
+
+    /* 左右容器 */
+    .container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: row; /* 左右排列 */
+    }
+
+    .left, .right {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+
+    /* 左側: 垂直置中數字與時間，比例為1 */
+    .left {
+      flex: 3;
+      flex-direction: column;
+    }
+    /* 右側: 比例為2 */
+    .right {
+      flex: 5;
+    }
+    
+    /* 數字 */
+    #power {
+      font-size: 4em;      /* 大字體 */
+      font-weight: bold;
+      color: #000000;      /* 預設黑色 */
+      text-align: center;
+      transition: color 0.4s ease;
+      line-height: 0.9;
+    } 
+    
+    /* 時間小一點 */
+    #time {
+      font-size: 0.9em;
+      color: #aaa;
+      margin-top: 5px;
+    }
+
+    /* 右側: 圖片 */
+    .right img {
+      max-width: 100%;     /* 由原本的95%改為100% */
+      max-height: 100%;    /* 由原本的95%改為100% */
+      border: 2px solid #222;
+      border-radius: 6px;
+      display: block;
+    }
+
+    /* 若螢幕很窄（保護性），改為上下排列 */
+    <!--
+    @media (max-width: 600px) {
+      .container { flex-direction: column; }
+      #power { font-size: 8em; }
+    }
+    -->
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="left">
+      <div id="power">讀取中...</div>
+      <div id="time"></div>
+    </div>
+
+    <div class="right">
+      <img id="chart" src="" alt="用電曲線" style="display:none;">
+    </div>
+  </div>
+
+<script>
+  function fetchPower() {
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "https://chingjuchang-ux.github.io/dds-power/power.json?_=" + new Date().getTime(), true); // 加亂數避免快取
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState !== 4) return;
+
+      var powerEl = document.getElementById("power");
+      var timeEl = document.getElementById("time");
+      var chartEl = document.getElementById("chart");
+
+      if (xhr.status === 200) {
+        try {
+          var data = JSON.parse(xhr.responseText);
+
+          // 更新數字（如果有）
+          if (data.power !== undefined && data.power !== null) {
+            // powerEl.textContent = "全校即時用電：" + data.power + " kW";
+            // powerEl.textContent = data.power + " kW";
+
+            // 顏色警示（閾值可調整）
+            if (data.power >= 3000) {
+              // powerEl.style.color = "#ff0000"; // 紅色
+              powercolor = "#ff0000"
+            } else {
+              // powerEl.style.color = "#000000"; // 黑色
+              powercolor = "#000000"
+            }
+          } else {
+            powerEl.textContent = "無用電資料";
+            powerEl.style.color = "#00ffcc";
+          }
+
+          powerEl.innerHTML = '<span style="color:#000000;">全校即時用電：</span>' +'<span style=powercolor>' + data.power + 'kW</span>';
+
+          // 顯示 last_update（若有），否則顯示現在時間
+          if (data.last_update) {
+            timeEl.textContent = "更新時間：" + data.last_update;
+          } else {
+            var now = new Date();
+            timeEl.textContent = "更新時間：" + now.toLocaleTimeString();
+          }
+
+          // 圖片：若有 chart_url 則顯示並加上亂數避免快取；否則隱藏
+          var chartUrl = "";
+          if (data.chart_url) {
+            chartUrl = data.chart_url;
+          } else if (data.charts && typeof data.charts === "object") {
+            // 若使用多圖結構，可嘗試取 today 欄位
+            chartUrl = data.charts.today || "";
+          }
+
+          if (chartUrl) {
+            chartEl.style.display = ""; // 顯示
+            chartEl.src = chartUrl + "?_=" + new Date().getTime();
+          } else {
+            chartEl.style.display = "none";
+            chartEl.src = "";
+          }
+
+        } catch (e) {
+          powerEl.textContent = "❌ 資料解析錯誤";
+          timeEl.textContent = "";
+          chartEl.style.display = "none";
+        }
+      } else {
+        powerEl.textContent = "❌ 資料讀取失敗";
+        timeEl.textContent = "";
+        chartEl.style.display = "none";
+      }
+    };
+    xhr.send();
+  }
+
+  // 初次載入 + 每分鐘更新
+  fetchPower();
+  setInterval(fetchPower, 60000);
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
