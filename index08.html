@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
@@ -35,11 +36,16 @@
       overflow: hidden;
     }
 
-    /* 左側: 垂直置中數字與時間 */
+    /* 左側: 垂直置中數字與時間，比例為1 */
     .left {
+      flex: 1;
       flex-direction: column;
     }
-
+    /* 右側: 比例為2 */
+    .right {
+      flex: 2;
+    }
+    
     /* 數字 */
     #power {
       font-size: 4em;      /* 大字體 */
@@ -166,6 +172,7 @@
 </script>
 </body>
 </html>
+
 
 
 
