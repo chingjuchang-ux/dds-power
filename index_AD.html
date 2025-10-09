@@ -55,11 +55,11 @@
       flex-direction: column;
     }    
     /* 右側中: 比例為1 */
-    .right2 {
+    .right1 {
       flex: 1;
     }
     /* 最右側: 比例為1 */
-    .right1 {
+    .right2 {
       flex: 1;
     }    
   
@@ -80,8 +80,16 @@
       margin-top: 5px;
     }
 
+    /* 左側: 圖片 */
+    .left2 img {
+      max-width: 100%;     /* 由原本的95%改為100% */
+      max-height: 100%;    /* 由原本的95%改為100% */
+      border: 2px solid #222;
+      border-radius: 6px;
+      display: block;
+    }   
     /* 右側: 圖片 */
-    .right img {
+    .right2 img {
       max-width: 100%;     /* 由原本的95%改為100% */
       max-height: 100%;    /* 由原本的95%改為100% */
       border: 2px solid #222;
@@ -113,7 +121,7 @@
 <script>
   function fetchPower() {
     var xhr = new XMLHttpRequest();
-    xhr.open("GET", "https://chingjuchang-ux.github.io/dds-power/power.json?_=" + new Date().getTime(), true); // 加亂數避免快取
+    xhr.open("GET", "https://esg.fcu.edu.tw/power-data-static/data.json?_=" + new Date().getTime(), true); // 加亂數避免快取
     xhr.onreadystatechange = function() {
       if (xhr.readyState !== 4) return;
 
