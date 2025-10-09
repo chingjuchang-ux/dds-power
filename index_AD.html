@@ -134,8 +134,8 @@
           var data = JSON.parse(xhr.responseText);
 
           // 更新數字（如果有）
-          if (data.power !== undefined && data.power !== null) {
-             powerEl.textContent = "全校即時用電 - " + data.power + " kW";
+          if (data.whole_school_kwh !== undefined && data.whole_school_kwh !== null) {
+             powerEl.textContent = "全校即時用電 - " + data.whole_school_kwh + " kW";
           } else {
             powerEl.textContent = "無用電資料";
             powerEl.style.color = "#00ffcc";
@@ -151,11 +151,11 @@
 
           // 圖片：若有 chart_url 則顯示並加上亂數避免快取；否則隱藏
           var chartUrl = "";
-          if (data.chart_url) {
-            chartUrl = data.chart_url;
-          } else if (data.charts && typeof data.charts === "object") {
+          if (data.whole-school-4-1) {
+            chartUrl = data.whole-school-4-1;
+          } else if (data.whole-school-4-1 && typeof data.whole-school-4-1 === "object") {
             // 若使用多圖結構，可嘗試取 today 欄位
-            chartUrl = data.charts.today || "";
+            chartUrl = data.whole-school-4-1.today || "";
           }
 
           if (chartUrl) {
