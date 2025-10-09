@@ -123,9 +123,9 @@
       xhr.onreadystatechange = function() {
         if (xhr.readyState !== 4) return;
 
-        var powerEl = document.getElementById("ryb_kw_sum");
+        var powerEl = document.getElementById("power");
         // var timeEl = document.getElementById("time");
-        var chartEl = document.getElementById("ryb");
+        var chartEl = document.getElementById("chart");
 
         if (!powerEl || !chartEl) return; // 防呆
 
