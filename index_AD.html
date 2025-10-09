@@ -35,7 +35,7 @@
       flex-direction: row; /* 左右排列 */
     }
 
-    .left, .right {
+    .left1, .left2, right2, .right1 {
       flex: 1;
       display: flex;
       justify-content: center;
@@ -44,16 +44,25 @@
       overflow: hidden;
     }
 
-    /* 左側: 垂直置中數字與時間，比例為1 */
-    .left {
-      flex: 3;
+    /* 最左側: 垂直置中數字與時間，比例為1 */
+    .left1 {
+      flex: 1;
       flex-direction: column;
     }
-    /* 右側: 比例為2 */
-    .right {
-      flex: 5;
+    /* 左側中: 垂直置中數字與時間，比例為1 */
+    .left2 {
+      flex: 1;
+      flex-direction: column;
+    }    
+    /* 右側中: 比例為1 */
+    .right2 {
+      flex: 1;
     }
-    
+    /* 最右側: 比例為1 */
+    .right1 {
+      flex: 1;
+    }    
+  
     /* 數字 */
     #power {
       font-size: 4em;      /* 大字體 */
