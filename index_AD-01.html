@@ -123,9 +123,9 @@
       xhr.onreadystatechange = function() {
         if (xhr.readyState !== 4) return;
 
-        var powerEl = document.getElementById("power");
+        var powerEl = document.getElementById("ryb_kw_sum");
         // var timeEl = document.getElementById("time");
-        var chartEl = document.getElementById("chart");
+        var chartEl = document.getElementById("ryb");
 
         if (!powerEl || !chartEl) return; // 防呆
 
@@ -134,8 +134,8 @@
             var data = JSON.parse(xhr.responseText);
 
             // 更新數字
-            if (data.whole_school_kwh !== undefined && data.whole_school_kwh !== null) {
-              powerEl.textContent = "全校即時用電 - " + data.whole_school_kwh + " kW";
+            if (data.ryb_kw_sum !== undefined && data.ryb_kw_sum !== null) {
+              powerEl.textContent = "全校即時用電 - " + data.ryb_kw_sum + " kW";
               powerEl.style.color = "#000";
             } else {
               powerEl.textContent = "無用電資料";
@@ -155,11 +155,11 @@
             // 讀取圖片 URL：
             // 若 JSON 鍵名為 "whole-school-4-1"（含連字號），要用 bracket notation
             var chartUrl = "";
-            if (data["whole-school-4-1"]) {
-              if (typeof data["whole-school-4-1"] === "string") {
-                chartUrl = data["whole-school-4-1"];
-              } else if (typeof data["whole-school-4-1"] === "object") {
-                chartUrl = data["whole-school-4-1"].today || "";
+            if (data["ryb"]) {
+              if (typeof data["ryb"] === "string") {
+                chartUrl = data["ryb"];
+              } else if (typeof data["ryb"] === "object") {
+                chartUrl = data["ryb"].today || "";
               }
             }
 
