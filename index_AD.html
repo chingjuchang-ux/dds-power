@@ -125,9 +125,9 @@
     xhr.onreadystatechange = function() {
       if (xhr.readyState !== 4) return;
 
-      var powerEl = document.getElementById("power");
-      var timeEl = document.getElementById("time");
-      var chartEl = document.getElementById("chart");
+      var powerEl = document.getElementById("whole_school_kwh");
+      // var timeEl = document.getElementById("time");
+      var chartEl = document.getElementById("whole-school-4-1");
 
       if (xhr.status === 200) {
         try {
@@ -142,12 +142,12 @@
           }
 
           // 顯示 last_update（若有），否則顯示現在時間
-          if (data.last_update) {
-            timeEl.textContent = "更新時間：" + data.last_update;
-          } else {
-            var now = new Date();
-            timeEl.textContent = "更新時間：" + now.toLocaleTimeString();
-          }
+          // if (data.last_update) {
+          //   timeEl.textContent = "更新時間：" + data.last_update;
+          // } else {
+          //   var now = new Date();
+          //   timeEl.textContent = "更新時間：" + now.toLocaleTimeString();
+          // }
 
           // 圖片：若有 chart_url 則顯示並加上亂數避免快取；否則隱藏
           var chartUrl = "";
@@ -168,12 +168,12 @@
 
         } catch (e) {
           powerEl.textContent = "❌ 資料解析錯誤";
-          timeEl.textContent = "";
+          // timeEl.textContent = "";
           chartEl.style.display = "none";
         }
       } else {
         powerEl.textContent = "❌ 資料讀取失敗";
-        timeEl.textContent = "";
+        // timeEl.textContent = "";
         chartEl.style.display = "none";
       }
     };
