@@ -107,41 +107,57 @@
 <body>
   <div class="container">
     <div class="left1">
-      <div id="power">讀取中...</div>
+      <div id="adpower">讀取中...</div>
       <div id="time"></div>
     </div>
-
+    <div class="left2">
+      <img id="adchart" src="" alt="用電曲線" style="display:none;">
+    </div>   
+    <div class="right1">
+      <div id="wholepower">讀取中...</div>
+      <div id="time"></div> 
+    </div>
     <div class="right2">
-      <img id="chart" src="" alt="用電曲線" style="display:none;">
+      <img id="wholechart" src="" alt="用電曲線" style="display:none;">
     </div>
   </div>
 
   <script>
     function fetchPower() {
       var xhr = new XMLHttpRequest();
-      xhr.open("GET", "https://esg.fcu.edu.tw/power-data-static/data.json?_=" + new Date().getTime(), true); // 加亂數避免快取
+      xhr.open("GET", "https://chingjuchang-ux.github.io/dds-power/data.json?_=" + new Date().getTime(), true); // 加亂數避免快取
       xhr.onreadystatechange = function() {
         if (xhr.readyState !== 4) return;
 
-        var powerEl = document.getElementById("power");
+        var adpowerEl = document.getElementById("adpower");
+        var wholepowerEl = document.getElementById("wholepower");
         // var timeEl = document.getElementById("time");
-        var chartEl = document.getElementById("chart");
+        var adchartEl = document.getElementById("adchart");
+        var wholechartEl = document.getElementById("adchart");
 
-        if (!powerEl || !chartEl) return; // 防呆
+        if (!adpowerEl || !adchartEl || !wholepowerE1 || !wholechartE1) return; // 防呆
 
         if (xhr.status === 200) {
           try {
             var data = JSON.parse(xhr.responseText);
 
-            // 更新數字
-            if (data.ryb_kw_sum !== undefined && data.ryb_kw_sum !== null) {
-              powerEl.textContent = "全校即時用電 - " + data.ryb_kw_sum + " kW";
+            // 更新人言大樓用電數字
+            if (data.ad_kw_sum !== undefined && data.ad_kw_sum !== null) {
+              powerEl.textContent = "人言大樓即時用電 - " + data.ad_kw_sum + " kW";
               powerEl.style.color = "#000";
             } else {
               powerEl.textContent = "無用電資料";
               powerEl.style.color = "#00ffcc";
             }
-
+            // 更新全校用電數字
+            if (data.whole_kw_sum !== undefined && data.whole_kw_sum !== null) {
+              powerEl.textContent = "全校即時用電 - " + data.whole_kw_sum + " kW";
+              powerEl.style.color = "#000";
+            } else {
+              powerEl.textContent = "無用電資料";
+              powerEl.style.color = "#00ffcc";
+            }
+            
             // 顯示 last_update（如需要，取消下列註解）
             /*
             if (data.last_update) {
