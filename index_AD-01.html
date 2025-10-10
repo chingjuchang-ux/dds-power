@@ -168,36 +168,52 @@
             }
             */
 
-            // 讀取圖片 URL：
-            // 若 JSON 鍵名為 "whole-school-4-1"（含連字號），要用 bracket notation
-            var chartUrl = "";
-            if (data["ryb"]) {
-              if (typeof data["ryb"] === "string") {
-                chartUrl = data["ryb"];
-              } else if (typeof data["ryb"] === "object") {
-                chartUrl = data["ryb"].today || "";
+            // 圖片：若有 chart_url 則顯示並加上亂數避免快取；否則隱藏
+            var adchartUrl = "";
+            if (data.ad) {
+                adchartUrl = data.ad;
+              } else if (data.charts && typeof data.charts === "object") {
+                adchartUrl = data.charts.today || "";
               }
             }
-
-            if (chartUrl) {
-              chartEl.style.display = ""; // 顯示
-              chartEl.src = chartUrl + "?_=" + new Date().getTime();
+            if (adchartUrl) {
+              adchartEl.style.display = ""; // 顯示
+              adchartEl.src = adchartUrl + "?_=" + new Date().getTime();
             } else {
-              chartEl.style.display = "none";
-              chartEl.src = "";
+              adchartEl.style.display = "none";
+              adchartEl.src = "";
             }
-
+            var wholechartUrl = "";
+            if (data.whole_4_1) {
+                wholechartUrl = data.whole_4_1;
+              } else if (data.charts && typeof data.charts === "object") {
+                wholechartUrl = data.charts.today || "";
+              }
+            }
+            if (wholechartUrl) {
+              wholechartEl.style.display = ""; // 顯示
+              wholechartEl.src = wholechartUrl + "?_=" + new Date().getTime();
+            } else {
+              wholechartEl.style.display = "none";
+              wholechartEl.src = "";
+            }
           } catch (e) {
-            powerEl.textContent = "❌ 資料解析錯誤";
+            adpowerEl.textContent = "❌ 資料解析錯誤";
+            wholepowerEl.textContent = "❌ 資料解析錯誤"        
             // if (timeEl) timeEl.textContent = "";
-            chartEl.style.display = "none";
-            chartEl.src = "";
+            adchartEl.style.display = "none";
+            adchartEl.src = "";
+            wholechartEl.style.display = "none";
+            wholechartEl.src = "";
           }
         } else {
-          powerEl.textContent = "❌ 資料讀取失敗";
+          adpowerEl.textContent = "❌ 資料讀取失敗";
+          wholepowerEl.textContent = "❌ 資料讀取失敗";
           // if (timeEl) timeEl.textContent = "";
-          chartEl.style.display = "none";
-          chartEl.src = "";
+          adchartEl.style.display = "none";
+          adchartEl.src = "";
+          wholechartEl.style.display = "none";
+          wholechartEl.src = "";
         }
       };
       xhr.send();
