@@ -133,7 +133,7 @@
         var wholepowerEl = document.getElementById("wholepower");
         // var timeEl = document.getElementById("time");
         var adchartEl = document.getElementById("adchart");
-        var wholechartEl = document.getElementById("adchart");
+        var wholechartEl = document.getElementById("wholechart");
 
         if (!adpowerEl || !adchartEl || !wholepowerE1 || !wholechartE1) return; // 防呆
 
@@ -143,19 +143,19 @@
 
             // 更新人言大樓用電數字
             if (data.ad_kw_sum !== undefined && data.ad_kw_sum !== null) {
-              powerEl.textContent = "人言大樓即時用電 - " + data.ad_kw_sum + " kW";
-              powerEl.style.color = "#000";
+              adpowerEl.textContent = "人言大樓即時用電 - " + data.ad_kw_sum + " kW";
+              adpowerEl.style.color = "#000";
             } else {
-              powerEl.textContent = "無用電資料";
-              powerEl.style.color = "#00ffcc";
+              adpowerEl.textContent = "無用電資料";
+              adpowerEl.style.color = "#00ffcc";
             }
             // 更新全校用電數字
             if (data.whole_kw_sum !== undefined && data.whole_kw_sum !== null) {
-              powerEl.textContent = "全校即時用電 - " + data.whole_kw_sum + " kW";
-              powerEl.style.color = "#000";
+              wholepowerEl.textContent = "全校即時用電 - " + data.whole_kw_sum + " kW";
+              wholepowerEl.style.color = "#000";
             } else {
-              powerEl.textContent = "無用電資料";
-              powerEl.style.color = "#00ffcc";
+              wholepowerEl.textContent = "無用電資料";
+              wholepowerEl.style.color = "#00ffcc";
             }
             
             // 顯示 last_update（如需要，取消下列註解）
