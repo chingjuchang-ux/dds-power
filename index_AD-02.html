@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>即時用電顯示</title>
+  <script>
+  (function() {
+    if (!location.search) {
+      const today = new Date().toISOString().slice(0,10).replace(/-/g,"");
+      location.href = location.pathname + "?v=" + today;
+    }
+  })();
+  </script>
+  <style>
+    /* 基本頁面樣式 */
+    body {
+      background: #fff;
+      color: #000;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      width: 1920px;     /* 看板固定寬度 */
+      height: 120px;     /* 看板固定高度 */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+    .container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: row;
+    }
+    .left1, .left2, .right2, .right1 {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+    .left1, .left2 { flex-direction: column; }
+
+    /* 數字 */
+    #adpower, #wholepower {
+      font-size: 4em;
+      font-weight: bold;
+      color: #000;
+      text-align: center;
+      transition: color 0.4s ease;
+      line-height: 0.9;
+    }
+
+    /* 圖片 */
+    .left2 img, .right2 img {
+      max-width: 100%;
+      max-height: 100%;
+      border: 2px solid #222;
+      border-radius: 6px;
+      display: block;
+    }
+
+    /* 響應式（如需才開） */
+    /* @media (max-width: 600px) {
+      .container { flex-direction: column; }
+      #adpower, #wholepower { font-size: 3em; }
+    } */
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="left1">
+      <div id="adpower">讀取中...</div>
+    </div>
+    <div class="left2">
+      <img id="adchart" src="" alt="用電曲線" style="display:none;">
+    </div>
+    <div class="right1">
+      <div id="wholepower">讀取中...</div>
+    </div>
+    <div class="right2">
+      <img id="wholechart" src="" alt="用電曲線" style="display:none;">
+    </div>
+  </div>
+
+  <script>
+    function fetchPower() {
+      const xhr = new XMLHttpRequest();
+      xhr.open("GET", "https://chingjuchang-ux.github.io/dds-power/data.json?_=" + Date.now(), true); // 加亂數避免快取
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState !== 4) return;
+
+        const adpowerEl = document.getElementById("adpower");
+        const wholepowerEl = document.getElementById("wholepower");
+        const adchartEl = document.getElementById("adchart");
+        const wholechartEl = document.getElementById("wholechart");
+
+        // 防呆：若任一目標元素不存在就不處理
+        if (!adpowerEl || !adchartEl || !wholepowerEl || !wholechartEl) return;
+
+        if (xhr.status === 200) {
+          try {
+            const data = JSON.parse(xhr.responseText);
+
+            // 人言大樓即時用電
+            if (data.ad_kw_sum != null) {
+              adpowerEl.textContent = "人言大樓即時用電 - " + Number(data.ad_kw_sum).toLocaleString() + " kW";
+              adpowerEl.style.color = "#000";
+            } else {
+              adpowerEl.textContent = "無用電資料";
+              adpowerEl.style.color = "#00ffcc";
+            }
+
+            // 全校即時用電
+            if (data.whole_kw_sum != null) {
+              wholepowerEl.textContent = "全校即時用電 - " + Number(data.whole_kw_sum).toLocaleString() + " kW";
+              wholepowerEl.style.color = "#000";
+            } else {
+              wholepowerEl.textContent = "無用電資料";
+              wholepowerEl.style.color = "#00ffcc";
+            }
+
+            // 人言大樓圖
+            let adchartUrl = "";
+            if (typeof data.ad === "string") {
+              adchartUrl = data.ad;
+            } else if (data.charts && typeof data.charts === "object") {
+              adchartUrl = data.charts.today || "";
+            }
+            if (adchartUrl) {
+              adchartEl.style.display = "";
+              adchartEl.src = adchartUrl + "?_=" + Date.now();
+            } else {
+              adchartEl.style.display = "none";
+              adchartEl.src = "";
+            }
+
+            // 全校圖
+            let wholechartUrl = "";
+            if (typeof data.whole_4_1 === "string") {
+              wholechartUrl = data.whole_4_1;
+            } else if (data.charts && typeof data.charts === "object") {
+              wholechartUrl = data.charts.today || "";
+            }
+            if (wholechartUrl) {
+              wholechartEl.style.display = "";
+              wholechartEl.src = wholechartUrl + "?_=" + Date.now();
+            } else {
+              wholechartEl.style.display = "none";
+              wholechartEl.src = "";
+            }
+
+          } catch (e) {
+            adpowerEl.textContent = "❌ 資料解析錯誤";
+            wholepowerEl.textContent = "❌ 資料解析錯誤";
+            adchartEl.style.display = "none";
+            adchartEl.src = "";
+            wholechartEl.style.display = "none";
+            wholechartEl.src = "";
+          }
+        } else {
+          adpowerEl.textContent = "❌ 資料讀取失敗";
+          wholepowerEl.textContent = "❌ 資料讀取失敗";
+          adchartEl.style.display = "none";
+          adchartEl.src = "";
+          wholechartEl.style.display = "none";
+          wholechartEl.src = "";
+        }
+      };
+      xhr.send();
+    }
+
+    // 初次載入 + 每分鐘更新
+    fetchPower();
+    setInterval(fetchPower, 60_000);
+  </script>
+</body>
+</html>
