@@ -39,11 +39,13 @@
       box-sizing: border-box;
       overflow: hidden;
     }
-    .left1, .left2 { flex-direction: column; }
+    .left1, .left2 {
+      flex-direction: column; 
+    }
 
     /* 數字 */
-    #adpower, #wholepower {
-      font-size: 4em;
+    adpower, wholepower {
+      font-size: 3em;
       font-weight: bold;
       color: #000;
       text-align: center;
@@ -120,7 +122,7 @@
               wholepowerEl.style.color = "#00ffcc";
             }
 
-            // 人言大樓圖
+            // 人言大樓即時用電圖表
             let adchartUrl = "";
             if (typeof data.ad === "string") {
               adchartUrl = data.ad;
@@ -135,7 +137,7 @@
               adchartEl.src = "";
             }
 
-            // 全校圖
+            // 全校即時用電圖表
             let wholechartUrl = "";
             if (typeof data.whole_4_1 === "string") {
               wholechartUrl = data.whole_4_1;
@@ -172,7 +174,7 @@
 
     // 初次載入 + 每分鐘更新
     fetchPower();
-    setInterval(fetchPower, 60_000);
+    setInterval(fetchPower, 60000);
   </script>
 </body>
 </html>
