@@ -1,10 +1,11 @@
 {
-   "whole_4_1": "https://chingjuchang-ux.github.io/dds-power/chart.png",
+   "whole_4_1": "https://chingjuchang-ux.github.io/dds-power/chart.jpg",
    "whole_2_1": "https://chingjuchang-ux.github.io/dds-power/chart.jpg",
-   "ad": "https://chingjuchang-ux.github.io/dds-power/chart.png",
+   "ad": "https://chingjuchang-ux.github.io/dds-power/chart.jpg",
    "ah": "https://chingjuchang-ux.github.io/dds-power/chart.jpg",
     "whole_kwh": 1000,
     "whole_kw_sum": 2000,
     "ad_kw_sum": 3000,
     "ah_kw_sum": 4000
+
 }
