@@ -111,6 +111,7 @@
               powerEl.style.color = "#000";
             } else {
               powerEl.textContent = "無用電資料";
+              powertEl.style.display = "none";
               powerEl.style.color = "#00ffcc";
             }
 
@@ -120,6 +121,7 @@
               wholepowerEl.style.color = "#000";
             } else {
               wholepowerEl.textContent = "無用電資料";
+              wholepowerEl.style.display = "none";
               wholepowerEl.style.color = "#00ffcc";
             }
 
@@ -156,6 +158,8 @@
           } catch (e) {
             powerEl.textContent = "❌ 資料解析錯誤";
             wholepowerEl.textContent = "❌ 資料解析錯誤";
+            powerEl.style.display = "none";
+            wholepowerEl.style.display = "none";
             chartEl.style.display = "none";
             adchartEl.src = "";
             wholechartEl.style.display = "none";
@@ -164,6 +168,8 @@
         } else {
           powerEl.textContent = "❌ 資料讀取失敗";
           wholepowerEl.textContent = "❌ 資料讀取失敗";
+          powerEl.style.display = "none";
+          wholepowerEl.style.display = "none";
           chartEl.style.display = "none";
           chartEl.src = "";
           wholechartEl.style.display = "none";
