@@ -32,6 +32,7 @@
       flex-direction: row;
     }
     .left, .right {
+      flex: 1;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -102,7 +103,7 @@
 
             // 全校即時用電
             if (data.whole_kw_sum != null && data.whole_kwh != null) {
-              wholepowerEl.textContent = "全校即時用電 - " + Number(data.whole_kw_sum).toLocaleString() + " kW " + "全校累積用電度數 - " + Number(data.whole_kwh).toLocalString() + " kWh";
+              wholepowerEl.textContent = "全校即時用電 - " + Number(data.whole_kw_sum).toLocaleString() + " kW " + "全校累積用電度數 - " + Number(data.whole_kwh).toLocaleString() + " kWh";
               wholepowerEl.style.color = "#000";
             } else {
               wholepowerEl.textContent = "無用電資料";
