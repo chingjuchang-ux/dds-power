@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
@@ -16,26 +15,23 @@
     /* 基本頁面樣式 */
     body {
       background: #fff;
-      color: #000000;
+      color: #000;
       font-family: Arial, sans-serif;
       margin: 0;
-      width: 1920px;     /* 固定寬度 */
-      height: 120px;     /* 固定高度 */
+      width: 1920px;     /* 看板固定寬度 */
+      height: 120px;     /* 看板固定高度 */
       display: flex;
       justify-content: center;
       align-items: center;
-      overflow: hidden;  /* 防止內容超出 */
+      overflow: hidden;
     }
-
-    /* 左右容器 */
     .container {
       width: 100%;
       height: 100%;
       display: flex;
-      flex-direction: row; /* 左右排列 */
+      flex-direction: row;
     }
-
-    .left, .right {
+    .left1, .left2, .right2, .right1 {
       flex: 1;
       display: flex;
       justify-content: center;
@@ -43,164 +39,143 @@
       box-sizing: border-box;
       overflow: hidden;
     }
+    .left1, .left2 {
+      flex-direction: column; 
+    }
 
-    /* 左側: 垂直置中數字與時間，比例為1 */
-    .left {
-      flex: 3;
-      flex-direction: column;
-    }
-    /* 右側: 比例為2 */
-    .right {
-      flex: 5;
-    }
-    
     /* 數字 */
-    #power {
-      font-size: 4em;      /* 大字體 */
+    #power, #wholepower {
+      font-size: 2em;
       font-weight: bold;
-      color: #000000;      /* 預設黑色 */
+      color: #000;
       text-align: center;
       transition: color 0.4s ease;
       line-height: 0.9;
-    } 
-    
-    /* 時間小一點 */
-    #time {
-      font-size: 0.9em;
-      color: #aaa;
-      margin-top: 5px;
     }
 
-    /* 右側: 圖片 */
-    .right img {
-      max-width: 100%;     /* 由原本的95%改為100% */
-      max-height: 100%;    /* 由原本的95%改為100% */
+    /* 圖片 */
+    .left2 img, .right2 img {
+      max-width: 100%;
+      max-height: 100%;
       border: 2px solid #222;
       border-radius: 6px;
       display: block;
     }
 
-    /* 若螢幕很窄（保護性），改為上下排列 */
-    <!--
-    @media (max-width: 600px) {
+    /* 響應式（如需才開） */
+    /* @media (max-width: 600px) {
       .container { flex-direction: column; }
-      #power { font-size: 8em; }
-    }
-    -->
+      #adpower, #wholepower { font-size: 3em; }
+    } */
   </style>
 </head>
 <body>
   <div class="container">
-    <div class="left">
+    <div class="left1">
       <div id="power">讀取中...</div>
-      <div id="time"></div>
     </div>
-
-    <div class="right">
+    <div class="left2">
       <img id="chart" src="" alt="用電曲線" style="display:none;">
+    </div>
+    <div class="right1">
+      <div id="wholepower">讀取中...</div>
+    </div>
+    <div class="right2">
+      <img id="wholechart" src="" alt="用電曲線" style="display:none;">
     </div>
   </div>
 
-<script>
-  function fetchPower() {
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", "https://chingjuchang-ux.github.io/dds-power/power.json?_=" + new Date().getTime(), true); // 加亂數避免快取
-    xhr.onreadystatechange = function() {
-      if (xhr.readyState !== 4) return;
+  <script>
+    function fetchPower() {
+      const xhr = new XMLHttpRequest();
+      xhr.open("GET", "https://chingjuchang-ux.github.io/dds-power/data.json?_=" + Date.now(), true); // 加亂數避免快取
+      // xhr.open("GET", "https://esg.fcu.edu.tw/power-data-static/data.json?_=" + Date.now(), true); // 加亂數避免快取
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState !== 4) return;
 
-      var powerEl = document.getElementById("power");
-      var timeEl = document.getElementById("time");
-      var chartEl = document.getElementById("chart");
+        const powerEl = document.getElementById("power");
+        const wholepowerEl = document.getElementById("wholepower");
+        const chartEl = document.getElementById("chart");
+        const wholechartEl = document.getElementById("wholechart");
 
-      if (xhr.status === 200) {
-        try {
-          var data = JSON.parse(xhr.responseText);
+        // 防呆：若任一目標元素不存在就不處理
+        if (!powerEl || !chartEl || !wholepowerEl || !wholechartEl) return;
 
-          // 更新數字（如果有）
-          if (data.power !== undefined && data.power !== null) {
-             powerEl.textContent = "全校即時用電 - " + data.power + " kW";
-          } else {
-            powerEl.textContent = "無用電資料";
-            powerEl.style.color = "#00ffcc";
-          }
+        if (xhr.status === 200) {
+          try {
+            const data = JSON.parse(xhr.responseText);
 
-          // 顯示 last_update（若有），否則顯示現在時間
-          if (data.last_update) {
-            timeEl.textContent = "更新時間：" + data.last_update;
-          } else {
-            var now = new Date();
-            timeEl.textContent = "更新時間：" + now.toLocaleTimeString();
-          }
+            // 商學大樓即時用電
+            if (data.ah_kw_sum != null) {
+              powerEl.textContent = "商學大樓即時用電 - " + Number(data.ah_kw_sum).toLocaleString() + " kW";
+              powerEl.style.color = "#000";
+            } else {
+              powerEl.textContent = "無用電資料";
+              powerEl.style.color = "#00ffcc";
+            }
 
-          // 圖片：若有 chart_url 則顯示並加上亂數避免快取；否則隱藏
-          var chartUrl = "";
-          if (data.chart_url) {
-            chartUrl = data.chart_url;
-          } else if (data.charts && typeof data.charts === "object") {
-            // 若使用多圖結構，可嘗試取 today 欄位
-            chartUrl = data.charts.today || "";
-          }
+            // 全校即時用電
+            if (data.whole_kw_sum != null) {
+              wholepowerEl.textContent = "全校即時用電 - " + Number(data.whole_kw_sum).toLocaleString() + " kW";
+              wholepowerEl.style.color = "#000";
+            } else {
+              wholepowerEl.textContent = "無用電資料";
+              wholepowerEl.style.color = "#00ffcc";
+            }
 
-          if (chartUrl) {
-            chartEl.style.display = ""; // 顯示
-            chartEl.src = chartUrl + "?_=" + new Date().getTime();
-          } else {
+            // 商學大樓即時用電圖表
+            let chartUrl = "";
+            if (typeof data.ah === "string") {
+              chartUrl = data.ah;
+            } else if (data.charts && typeof data.charts === "object") {
+              chartUrl = data.charts.today || "";
+            }
+            if (chartUrl) {
+              chartEl.style.display = "";
+              chartEl.src = chartUrl + "?_=" + Date.now();
+            } else {
+              chartEl.style.display = "none";
+              chartEl.src = "";
+            }
+
+            // 全校即時用電圖表
+            let wholechartUrl = "";
+            if (typeof data.whole_4_1 === "string") {
+              wholechartUrl = data.whole_4_1;
+            } else if (data.charts && typeof data.charts === "object") {
+              wholechartUrl = data.charts.today || "";
+            }
+            if (wholechartUrl) {
+              wholechartEl.style.display = "";
+              wholechartEl.src = wholechartUrl + "?_=" + Date.now();
+            } else {
+              wholechartEl.style.display = "none";
+              wholechartEl.src = "";
+            }
+
+          } catch (e) {
+            powerEl.textContent = "❌ 資料解析錯誤";
+            wholepowerEl.textContent = "❌ 資料解析錯誤";
             chartEl.style.display = "none";
             chartEl.src = "";
+            wholechartEl.style.display = "none";
+            wholechartEl.src = "";
           }
-
-        } catch (e) {
-          powerEl.textContent = "❌ 資料解析錯誤";
-          timeEl.textContent = "";
+        } else {
+          powerEl.textContent = "❌ 資料讀取失敗";
+          wholepowerEl.textContent = "❌ 資料讀取失敗";
           chartEl.style.display = "none";
+          chartEl.src = "";
+          wholechartEl.style.display = "none";
+          wholechartEl.src = "";
         }
-      } else {
-        powerEl.textContent = "❌ 資料讀取失敗";
-        timeEl.textContent = "";
-        chartEl.style.display = "none";
-      }
-    };
-    xhr.send();
-  }
+      };
+      xhr.send();
+    }
 
-  // 初次載入 + 每分鐘更新
-  fetchPower();
-  setInterval(fetchPower, 60000);
-</script>
+    // 初次載入 + 每分鐘更新
+    fetchPower()
+    setInterval(fetchPower, 60000);
+  </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
