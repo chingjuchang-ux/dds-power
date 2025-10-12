@@ -44,7 +44,7 @@
     }
 
     /* 數字 */
-    #adpower, #wholepower {
+    #power, #wholepower {
       font-size: 2em;
       font-weight: bold;
       color: #000;
@@ -72,10 +72,10 @@
 <body>
   <div class="container">
     <div class="left1">
-      <div id="adpower">讀取中...</div>
+      <div id="power">讀取中...</div>
     </div>
     <div class="left2">
-      <img id="adchart" src="" alt="用電曲線" style="display:none;">
+      <img id="chart" src="" alt="用電曲線" style="display:none;">
     </div>
     <div class="right1">
       <div id="wholepower">讀取中...</div>
@@ -93,13 +93,13 @@
       xhr.onreadystatechange = function() {
         if (xhr.readyState !== 4) return;
 
-        const adpowerEl = document.getElementById("adpower");
+        const powerEl = document.getElementById("power");
         const wholepowerEl = document.getElementById("wholepower");
-        const adchartEl = document.getElementById("adchart");
+        const chartEl = document.getElementById("chart");
         const wholechartEl = document.getElementById("wholechart");
 
         // 防呆：若任一目標元素不存在就不處理
-        if (!adpowerEl || !adchartEl || !wholepowerEl || !wholechartEl) return;
+        if (!powerEl || !chartEl || !wholepowerEl || !wholechartEl) return;
 
         if (xhr.status === 200) {
           try {
@@ -107,11 +107,11 @@
 
             // 人言大樓即時用電
             if (data.ad_kw_sum != null) {
-              adpowerEl.textContent = "人言大樓即時用電 - " + Number(data.ad_kw_sum).toLocaleString() + " kW";
-              adpowerEl.style.color = "#000";
+              powerEl.textContent = "人言大樓即時用電 - " + Number(data.ad_kw_sum).toLocaleString() + " kW";
+              powerEl.style.color = "#000";
             } else {
-              adpowerEl.textContent = "無用電資料";
-              adpowerEl.style.color = "#00ffcc";
+              powerEl.textContent = "無用電資料";
+              powerEl.style.color = "#00ffcc";
             }
 
             // 全校即時用電
@@ -124,18 +124,18 @@
             }
 
             // 人言大樓即時用電圖表
-            let adchartUrl = "";
+            let chartUrl = "";
             if (typeof data.ad === "string") {
-              adchartUrl = data.ad;
+              chartUrl = data.ad;
             } else if (data.charts && typeof data.charts === "object") {
-              adchartUrl = data.charts.today || "";
+              chartUrl = data.charts.today || "";
             }
-            if (adchartUrl) {
-              adchartEl.style.display = "";
-              adchartEl.src = adchartUrl + "?_=" + Date.now();
+            if (chartUrl) {
+              chartEl.style.display = "";
+              chartEl.src = chartUrl + "?_=" + Date.now();
             } else {
-              adchartEl.style.display = "none";
-              adchartEl.src = "";
+              chartEl.style.display = "none";
+              chartEl.src = "";
             }
 
             // 全校即時用電圖表
@@ -154,18 +154,18 @@
             }
 
           } catch (e) {
-            adpowerEl.textContent = "❌ 資料解析錯誤";
+            powerEl.textContent = "❌ 資料解析錯誤";
             wholepowerEl.textContent = "❌ 資料解析錯誤";
-            adchartEl.style.display = "none";
+            chartEl.style.display = "none";
             adchartEl.src = "";
             wholechartEl.style.display = "none";
             wholechartEl.src = "";
           }
         } else {
-          adpowerEl.textContent = "❌ 資料讀取失敗";
+          powerEl.textContent = "❌ 資料讀取失敗";
           wholepowerEl.textContent = "❌ 資料讀取失敗";
-          adchartEl.style.display = "none";
-          adchartEl.src = "";
+          chartEl.style.display = "none";
+          chartEl.src = "";
           wholechartEl.style.display = "none";
           wholechartEl.src = "";
         }
