@@ -32,7 +32,6 @@
       flex-direction: row;
     }
     .left, .right {
-      flex: 1;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -40,8 +39,12 @@
       overflow: hidden;
     }
     .left {
+      flex: 2;
       flex-direction: column; 
     }
+    .right {
+      flex: 1;
+    }    
 
     /* 數字 */
     #wholepower {
@@ -91,49 +94,25 @@
         const wholechartEl = document.getElementById("wholechart");
 
         // 防呆：若任一目標元素不存在就不處理
-        if (!powerEl || !chartEl || !wholepowerEl || !wholechartEl) return;
+        if (!wholepowerEl || !wholechartEl) return;
 
         if (xhr.status === 200) {
           try {
             const data = JSON.parse(xhr.responseText);
 
-            // 人言大樓即時用電
-            if (data.ad_kw_sum != null) {
-              powerEl.textContent = "人言大樓即時用電 - " + Number(data.ad_kw_sum).toLocaleString() + " kW";
-              powerEl.style.color = "#000";
-            } else {
-              powerEl.textContent = "無用電資料";
-              powerEl.style.color = "#00ffcc";
-            }
-
             // 全校即時用電
             if (data.whole_kw_sum != null) {
-              wholepowerEl.textContent = "全校即時用電 - " + Number(data.whole_kw_sum).toLocaleString() + " kW";
+              wholepowerEl.textContent = "全校即時用電 - " + Number(data.whole_kw_sum).toLocaleString() + " kW " + "全校累積用電度數 - " + Number(data.whole_kwh).toLocalString() + " kWh";
               wholepowerEl.style.color = "#000";
             } else {
               wholepowerEl.textContent = "無用電資料";
               wholepowerEl.style.color = "#00ffcc";
             }
 
-            // 人言大樓即時用電圖表
-            let chartUrl = "";
-            if (typeof data.ad === "string") {
-              chartUrl = data.ad;
-            } else if (data.charts && typeof data.charts === "object") {
-              chartUrl = data.charts.today || "";
-            }
-            if (chartUrl) {
-              chartEl.style.display = "";
-              chartEl.src = chartUrl + "?_=" + Date.now();
-            } else {
-              chartEl.style.display = "none";
-              chartEl.src = "";
-            }
-
             // 全校即時用電圖表
             let wholechartUrl = "";
-            if (typeof data.whole_4_1 === "string") {
-              wholechartUrl = data.whole_4_1;
+            if (typeof data.whole_2_1 === "string") {
+              wholechartUrl = data.whole_2_1;
             } else if (data.charts && typeof data.charts === "object") {
               wholechartUrl = data.charts.today || "";
             }
@@ -146,18 +125,12 @@
             }
 
           } catch (e) {
-            powerEl.textContent = "❌ 資料解析錯誤";
             wholepowerEl.textContent = "❌ 資料解析錯誤";
-            chartEl.style.display = "none";
-            adchartEl.src = "";
             wholechartEl.style.display = "none";
             wholechartEl.src = "";
           }
         } else {
-          powerEl.textContent = "❌ 資料讀取失敗";
           wholepowerEl.textContent = "❌ 資料讀取失敗";
-          chartEl.style.display = "none";
-          chartEl.src = "";
           wholechartEl.style.display = "none";
           wholechartEl.src = "";
         }
