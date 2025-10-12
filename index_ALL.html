@@ -101,7 +101,7 @@
             const data = JSON.parse(xhr.responseText);
 
             // 全校即時用電
-            if (data.whole_kw_sum != null) {
+            if (data.whole_kw_sum != null && data.whole_kwh != null) {
               wholepowerEl.textContent = "全校即時用電 - " + Number(data.whole_kw_sum).toLocaleString() + " kW " + "全校累積用電度數 - " + Number(data.whole_kwh).toLocalString() + " kWh";
               wholepowerEl.style.color = "#000";
             } else {
