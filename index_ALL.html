@@ -108,6 +108,7 @@
               wholepowerEl.style.color = "#000";
             } else {
               wholepowerEl.textContent = "無用電資料";
+              wholepowerEl.style.display = "none";
               wholepowerEl.style.color = "#00ffcc";
             }
 
@@ -128,12 +129,13 @@
 
           } catch (e) {
             wholepowerEl.textContent = "❌ 資料解析錯誤";
+            wholepowerEl.style.display = "none";
             wholechartEl.style.display = "none";
             wholechartEl.src = "";
           }
         } else {
-          // wholepowerEl.textContent = "❌ 資料讀取失敗";
-          wholepowerEl.textContent = " ";
+          wholepowerEl.textContent = "❌ 資料讀取失敗";
+          wholepowerEl.style.display = "none";
           wholechartEl.style.display = "none";
           wholechartEl.src = "";
         }
