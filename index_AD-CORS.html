@@ -82,13 +82,12 @@
       const wholechartEl = document.getElementById("wholechart");
 
       const targetUrl = "https://esg.fcu.edu.tw/power-data-static/data.json";
-      const proxyUrl = "https://api.allorigins.win/get?url=" + encodeURIComponent(targetUrl);
+      const proxyUrl = "https://thingproxy.freeboard.io/fetch/" + targetUrl + "?_=" + Date.now();
 
       try {
         const response = await fetch(proxyUrl + "?_=" + Date.now());
         if (!response.ok) throw new Error("HTTP " + response.status);
-        const wrapper = await response.json();
-        const data = JSON.parse(wrapper.contents); // 這裡要再解析一次 JSON！
+        const data = await response.json();
 
         // 人言大樓即時用電 (對應 data.ad_kw_sum)
         const ad_Power = data.ad_kw_sum ?? null;
