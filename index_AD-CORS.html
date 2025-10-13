@@ -89,8 +89,8 @@
         if (!response.ok) throw new Error("HTTP " + response.status);
         const data = await response.json();
 
-        // 人言大樓即時用電 (對應 data.power_data.ryb_kw_sum)
-        const rybPower = data.power_data?.ryb_kw_sum ?? null;
+        // 人言大樓即時用電 (對應 data.ad_kw_sum)
+        const Power = data.power_data?.ryb_kw_sum ?? null;
         if (rybPower != null) {
           powerEl.textContent = "人言大樓即時用電 - " + Number(rybPower).toLocaleString() + " kW";
           powerEl.style.color = "#000";
