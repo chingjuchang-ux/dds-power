@@ -88,8 +88,8 @@
   <script>
     function fetchPower() {
       const xhr = new XMLHttpRequest();
-      xhr.open("GET", "https://chingjuchang-ux.github.io/dds-power/data.json?_=" + Date.now(), true); // 加亂數避免快取
-      // xhr.open("GET", "https://esg.fcu.edu.tw/power-data-static/data.json?_=" + Date.now(), true); // 加亂數避免快取
+      // xhr.open("GET", "https://chingjuchang-ux.github.io/dds-power/data.json?_=" + Date.now(), true); // 加亂數避免快取
+      xhr.open("GET", "https://esg.fcu.edu.tw/power-data-static/data.json?_=" + Date.now(), true); // 加亂數避免快取
       xhr.onreadystatechange = function() {
         if (xhr.readyState !== 4) return;
 
