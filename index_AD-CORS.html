@@ -85,7 +85,7 @@
       const proxyUrl = "https://thingproxy.freeboard.io/fetch/" + targetUrl + "?_=" + Date.now();
 
       try {
-        const response = await fetch(proxyUrl + "?_=" + Date.now());
+        const response = await fetch(proxyUrl);
         if (!response.ok) throw new Error("HTTP " + response.status);
         const data = await response.json();
 
@@ -128,7 +128,7 @@
           wholechartEl.style.display = "none";
           wholechartEl.src = "";
         }
-
+        console.log("✅ 成功讀取資料：", data);
       } catch (err) {
         console.error("❌ 錯誤：", err);
         powerEl.textContent = "❌ 資料讀取或解析錯誤";
