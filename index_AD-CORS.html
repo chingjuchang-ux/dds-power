@@ -90,17 +90,17 @@
         const data = await response.json();
 
         // 人言大樓即時用電 (對應 data.ad_kw_sum)
-        const Power = data.power_data?.ryb_kw_sum ?? null;
-        if (rybPower != null) {
-          powerEl.textContent = "人言大樓即時用電 - " + Number(rybPower).toLocaleString() + " kW";
+        const adPower = data.ad_kw_sum ?? null;
+        if (adPower != null) {
+          powerEl.textContent = "人言大樓即時用電 - " + Number(adPower).toLocaleString() + " kW";
           powerEl.style.color = "#000";
         } else {
           powerEl.textContent = "無用電資料";
           powerEl.style.color = "#00ffcc";
         }
 
-        // 全校即時用電 (對應 data.power_data.whole_school_kw_sum)
-        const wholePower = data.power_data?.whole_school_kw_sum ?? null;
+        // 全校即時用電 (對應 data.whole_kw_sum)
+        const wholePower = data.whole_kw_sum ?? null;
         if (wholePower != null) {
           wholepowerEl.textContent = "全校即時用電 - " + Number(wholePower).toLocaleString() + " kW";
           wholepowerEl.style.color = "#000";
@@ -109,18 +109,18 @@
           wholepowerEl.style.color = "#00ffcc";
         }
 
-        // 人言大樓圖表 (data.images.ryb)
-        const rybChart = data.images?.ryb ?? "";
-        if (rybChart) {
+        // 人言大樓圖表 (data.ad)
+        const adChart = data.ad ?? "";
+        if (adChart) {
           chartEl.style.display = "";
-          chartEl.src = rybChart + "?_=" + Date.now();
+          chartEl.src = adChart + "?_=" + Date.now();
         } else {
           chartEl.style.display = "none";
           chartEl.src = "";
         }
 
         // 全校圖表 (data.images["whole-school-4-1"])
-        const wholeChart = data.images?.["whole-school-4-1"] ?? "";
+        const wholeChart = data.whole_4_1 ?? "";
         if (wholeChart) {
           wholechartEl.style.display = "";
           wholechartEl.src = wholeChart + "?_=" + Date.now();
