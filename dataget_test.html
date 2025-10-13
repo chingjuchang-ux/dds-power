@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>測試讀取遠端 JSON</title>
+</head>
+<body>
+<pre id="output">讀取中...</pre>
+
+<script>
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", "https://esg.fcu.edu.tw/power-data-static/data.json?_=" + Date.now(), true);
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4) {
+      var output = document.getElementById("output");
+      if (xhr.status === 200) {
+        try {
+          var data = JSON.parse(xhr.responseText);
+          output.textContent = JSON.stringify(data, null, 2);
+        } catch (e) {
+          output.textContent = "❌ JSON 解析錯誤：" + e.message;
+        }
+      } else {
+        output.textContent = "❌ 錯誤狀態：" + xhr.status;
+      }
+    }
+  };
+  xhr.send();
+</script>
+</body>
+</html>
