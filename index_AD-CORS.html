@@ -82,7 +82,8 @@
       const wholechartEl = document.getElementById("wholechart");
 
       const targetUrl = "https://esg.fcu.edu.tw/power-data-static/data.json";
-      const proxyUrl = "https://thingproxy.freeboard.io/fetch/" + targetUrl + "?_=" + Date.now();
+      const proxyUrl = "https://api.codetabs.com/v1/proxy?quest=" + encodeURIComponent(targetUrl);
+      // const proxyUrl = "https://thingproxy.freeboard.io/fetch/" + targetUrl + "?_=" + Date.now();
 
       try {
         const response = await fetch(proxyUrl);
