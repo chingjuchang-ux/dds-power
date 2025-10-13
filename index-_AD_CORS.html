@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>即時用電顯示</title>
+  <script>
+  (function() {
+    if (!location.search) {
+      const today = new Date().toISOString().slice(0,10).replace(/-/g,"");
+      location.href = location.pathname + "?v=" + today;
+    }
+  })();
+  </script>
+  <style>
+    body {
+      background: #fff;
+      color: #000;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      width: 1920px;
+      height: 120px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+    .container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: row;
+    }
+    .left1, .left2, .right2, .right1 {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+    .left1, .left2 {
+      flex-direction: column;
+    }
+    #power, #wholepower {
+      font-size: 2em;
+      font-weight: bold;
+      color: #000;
+      text-align: center;
+      transition: color 0.4s ease;
+      line-height: 0.9;
+    }
+    .left2 img, .right2 img {
+      max-width: 100%;
+      max-height: 100%;
+      border: 2px solid #222;
+      border-radius: 6px;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="left1">
+      <div id="power">讀取中...</div>
+    </div>
+    <div class="left2">
+      <img id="chart" src="" alt="用電曲線" style="display:none;">
+    </div>
+    <div class="right1">
+      <div id="wholepower">讀取中...</div>
+    </div>
+    <div class="right2">
+      <img id="wholechart" src="" alt="用電曲線" style="display:none;">
+    </div>
+  </div>
+
+  <script>
+    async function fetchPower() {
+      const powerEl = document.getElementById("power");
+      const wholepowerEl = document.getElementById("wholepower");
+      const chartEl = document.getElementById("chart");
+      const wholechartEl = document.getElementById("wholechart");
+
+      const targetUrl = "https://esg.fcu.edu.tw/power-data-static/data.json";
+      const proxyUrl = "https://api.allorigins.win/raw?url=" + encodeURIComponent(targetUrl);
+
+      try {
+        const response = await fetch(proxyUrl + "?_=" + Date.now());
+        if (!response.ok) throw new Error("HTTP " + response.status);
+        const data = await response.json();
+
+        // 人言大樓即時用電 (對應 data.power_data.ryb_kw_sum)
+        const rybPower = data.power_data?.ryb_kw_sum ?? null;
+        if (rybPower != null) {
+          powerEl.textContent = "人言大樓即時用電 - " + Number(rybPower).toLocaleString() + " kW";
+          powerEl.style.color = "#000";
+        } else {
+          powerEl.textContent = "無用電資料";
+          powerEl.style.color = "#00ffcc";
+        }
+
+        // 全校即時用電 (對應 data.power_data.whole_school_kw_sum)
+        const wholePower = data.power_data?.whole_school_kw_sum ?? null;
+        if (wholePower != null) {
+          wholepowerEl.textContent = "全校即時用電 - " + Number(wholePower).toLocaleString() + " kW";
+          wholepowerEl.style.color = "#000";
+        } else {
+          wholepowerEl.textContent = "無用電資料";
+          wholepowerEl.style.color = "#00ffcc";
+        }
+
+        // 人言大樓圖表 (data.images.ryb)
+        const rybChart = data.images?.ryb ?? "";
+        if (rybChart) {
+          chartEl.style.display = "";
+          chartEl.src = rybChart + "?_=" + Date.now();
+        } else {
+          chartEl.style.display = "none";
+          chartEl.src = "";
+        }
+
+        // 全校圖表 (data.images["whole-school-4-1"])
+        const wholeChart = data.images?.["whole-school-4-1"] ?? "";
+        if (wholeChart) {
+          wholechartEl.style.display = "";
+          wholechartEl.src = wholeChart + "?_=" + Date.now();
+        } else {
+          wholechartEl.style.display = "none";
+          wholechartEl.src = "";
+        }
+
+      } catch (err) {
+        console.error("❌ 錯誤：", err);
+        powerEl.textContent = "❌ 資料讀取或解析錯誤";
+        wholepowerEl.textContent = "❌ 資料讀取或解析錯誤";
+        chartEl.style.display = "none";
+        wholechartEl.style.display = "none";
+      }
+    }
+
+    // 初次載入 + 每分鐘更新
+    fetchPower();
+    setInterval(fetchPower, 60000);
+  </script>
+</body>
+</html>
