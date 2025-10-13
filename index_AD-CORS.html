@@ -87,7 +87,8 @@
       try {
         const response = await fetch(proxyUrl + "?_=" + Date.now());
         if (!response.ok) throw new Error("HTTP " + response.status);
-        const data = await response.json();
+        const wrapper = await response.json();
+        const data = JSON.parse(wrapper.contents); // 這裡要再解析一次 JSON！
 
         // 人言大樓即時用電 (對應 data.ad_kw_sum)
         const ad_Power = data.ad_kw_sum ?? null;
