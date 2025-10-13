@@ -82,7 +82,7 @@
       const wholechartEl = document.getElementById("wholechart");
 
       const targetUrl = "https://esg.fcu.edu.tw/power-data-static/data.json";
-      const proxyUrl = "https://api.allorigins.win/raw?url=" + encodeURIComponent(targetUrl);
+      const proxyUrl = "https://api.allorigins.win/get?url=" + encodeURIComponent(targetUrl);
 
       try {
         const response = await fetch(proxyUrl + "?_=" + Date.now());
