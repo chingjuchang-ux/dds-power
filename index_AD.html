@@ -89,23 +89,23 @@
 
   <script>
     function fetchPower() {
-      const xhr = new XMLHttpRequest();
+      var xhr = new XMLHttpRequest();
       xhr.open("GET", "https://chingjuchang-ux.github.io/dds-power/data.json?_=" + Date.now(), true); // 加亂數避免快取
       // xhr.open("GET", "https://esg.fcu.edu.tw/power-data-static/data.json?_=" + Date.now(), true); // 加亂數避免快取
       xhr.onreadystatechange = function() {
         if (xhr.readyState !== 4) return;
 
-        const powerEl = document.getElementById("power");
-        const wholepowerEl = document.getElementById("wholepower");
-        const chartEl = document.getElementById("chart");
-        const wholechartEl = document.getElementById("wholechart");
+        var powerEl = document.getElementById("power");
+        var wholepowerEl = document.getElementById("wholepower");
+        var chartEl = document.getElementById("chart");
+        var wholechartEl = document.getElementById("wholechart");
 
         // 防呆：若任一目標元素不存在就不處理
         if (!powerEl || !chartEl || !wholepowerEl || !wholechartEl) return;
 
         if (xhr.status === 200) {
           try {
-            const data = JSON.parse(xhr.responseText);
+            var data = JSON.parse(xhr.responseText);
 
             // 人言大樓即時用電
             if (data.ad_kw_sum != null) {
@@ -128,7 +128,7 @@
             }
 
             // 人言大樓即時用電圖表
-            let chartUrl = "";
+            var chartUrl = "";
             if (typeof data.ad === "string") {
               chartUrl = data.ad;
             } else if (data.charts && typeof data.charts === "object") {
@@ -143,7 +143,7 @@
             }
 
             // 全校即時用電圖表
-            let wholechartUrl = "";
+            var wholechartUrl = "";
             if (typeof data.whole_4_1 === "string") {
               wholechartUrl = data.whole_4_1;
             } else if (data.charts && typeof data.charts === "object") {
