@@ -145,7 +145,8 @@
 
             // 全校即時用電圖表
             var wholechartUrl = "";
-            if (typeof data.whole_4_1 === "string") {
+            // if (typeof data.whole_4_1 === "string") {
+            if (data.whole_4_1) {  
               wholechartUrl = data.whole_4_1;
             } else if (data.charts && typeof data.charts === "object") {
               wholechartUrl = data.charts.today || "";
