@@ -18,7 +18,7 @@
       color: #000;
       font-family: Arial, sans-serif;
       margin: 0;
-      width: 1920px;     /* 看板固定寬度 */
+      width: 100vw;      /* 看板固定寬度1920px，改為相對單位100vw，確保塞滿螢幕  */
       height: 120px;     /* 看板固定高度 */
       display: flex;
       justify-content: center;
@@ -38,6 +38,7 @@
       align-items: center;
       box-sizing: border-box;
       overflow: hidden;
+      border: 1px solid transparent; /* 保留測試邊框，避免 Flex bug */
     }
     .left1, .right1 {
       flex-direction: column;
@@ -50,7 +51,7 @@
       color: #000;
       text-align: center;
       transition: color 0.4s ease;
-      line-height: 0.9;
+      line-height: 1; /* 避免字體在不同瀏覽器垂直不置中。*/
     }
 
     /* 圖片 */
@@ -60,6 +61,7 @@
       border: 2px solid #222;
       border-radius: 6px;
       display: block;
+      object-fit: contain;
     }
 
     /* 響應式（如需才開） */
