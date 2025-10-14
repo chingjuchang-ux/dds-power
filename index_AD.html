@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>即時用電顯示</title>
+  <script>
+  (function() {
+    if (!location.search) {
+      const today = new Date().toISOString().slice(0,10).replace(/-/g,"");
+      location.href = location.pathname + "?v=" + today;
+    }
+  })();
+  </script>
+  <style>
+    /* 基本頁面樣式 */
+    body {
+      background: #fff;
+      color: #000;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      width: 100vw;      /* 看板固定寬度1920px，改為相對單位100vw，確保塞滿螢幕  */
+      height: 120px;     /* 看板固定高度 */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+    .container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: row;
+    }
+    .left1, .left2, .right2, .right1 {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-sizing: border-box;
+      overflow: hidden;
+      border: 1px solid transparent; /* 保留測試邊框，避免 Flex bug */
+    }
+    .left1, .right1 {
+      flex-direction: column;
+    }
+
+    /* 數字 */
+    #power, #wholepower {
+      font-size: 2em;
+      font-weight: bold;
+      color: #000;
+      text-align: center;
+      transition: color 0.4s ease;
+      line-height: 1; /* 避免字體在不同瀏覽器垂直不置中。*/
+    }
+
+    /* 圖片 */
+    .left2 img, .right2 img {
+      max-width: 100%;
+      max-height: 100%;
+      border: 2px solid #222;
+      border-radius: 6px;
+      display: block;
+      object-fit: contain;
+    }
+
+    /* 響應式（如需才開） */
+    /* @media (max-width: 600px) {
+      .container { flex-direction: column; }
+      #adpower, #wholepower { font-size: 3em; }
+    } */
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="left1">
+      <div id="power">讀取中...</div>
+    </div>
+    <div class="left2">
+      <img id="chart" src="" alt="用電曲線" style="display:none;">
+    </div>
+    <div class="right1">
+      <div id="wholepower">讀取中...</div>
+    </div>
+    <div class="right2">
+      <img id="wholechart" src="" alt="用電曲線" style="display:none;">
+    </div>
+  </div>
+
+  <script>
+    function fetchPower() {
+      var xhr = new XMLHttpRequest();
+      xhr.open("GET", "https://chingjuchang-ux.github.io/dds-power/data.json?_=" + Date.now(), true); // 加亂數避免快取
+      // xhr.open("GET", "https://esg.fcu.edu.tw/power-data-static/data.json?_=" + Date.now(), true); // 加亂數避免快取
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState !== 4) return;
+
+        var powerEl = document.getElementById("power");
+        var wholepowerEl = document.getElementById("wholepower");
+        var chartEl = document.getElementById("chart");
+        var wholechartEl = document.getElementById("wholechart");
+
+        // 防呆：若任一目標元素不存在就不處理
+        if (!powerEl || !chartEl || !wholepowerEl || !wholechartEl) return;
+
+        if (xhr.status === 200) {
+          try {
+            var data = JSON.parse(xhr.responseText);
+
+            // 人言大樓即時用電
+            if (data.ad_kw_sum != null) {
+              powerEl.textContent = "人言大樓即時用電 - " + Number(data.ad_kw_sum).toLocaleString() + " kW";
+              powerEl.style.color = "#000";
+            } else {
+              powerEl.textContent = "無用電資料";
+              // powertEl.style.display = "none";
+              powerEl.style.color = "#00ffcc";
+            }
+
+            // 全校即時用電
+            if (data.whole_kw_sum != null) {
+              wholepowerEl.textContent = "全校即時用電 - " + Number(data.whole_kw_sum).toLocaleString() + " kW";
+              wholepowerEl.style.color = "#000";
+            } else {
+              wholepowerEl.textContent = "無用電資料";
+              // wholepowerEl.style.display = "none";
+              wholepowerEl.style.color = "#00ffcc";
+            }
+
+            // 人言大樓即時用電圖表
+            // var chartUrl = "";
+            var chartUrl = "ad.png";
+            // if (typeof data.ad === "string") {
+            if (data.ad) {
+              // chartUrl = data.ad;
+              chartUrl = "ad.png";
+            } else if (data.charts && typeof data.charts === "object") {
+              chartUrl = data.charts.today || "";
+            }
+            if (chartUrl) {
+              chartEl.style.display = "";
+              chartEl.src = chartUrl + "?_=" + Date.now();
+            } else {
+              chartEl.style.display = "none";
+              chartEl.src = "";
+            }
+
+            // 全校即時用電圖表
+            // var wholechartUrl = "";
+            var wholechartUrl = "whole_4_1.png";
+            // if (typeof data.whole_4_1 === "string") {
+            if (data.whole_4_1) {  
+              // wholechartUrl = data.whole_4_1;
+              wholechartUrl = "whole_4_1.png";
+            } else if (data.charts && typeof data.charts === "object") {
+              wholechartUrl = data.charts.today || "";
+            }
+            if (wholechartUrl) {
+              wholechartEl.style.display = "";
+              wholechartEl.src = wholechartUrl + "?_=" + Date.now();
+            } else {
+              wholechartEl.style.display = "none";
+              wholechartEl.src = "";
+            }
+
+          } catch (e) {
+            powerEl.textContent = "❌ 資料解析錯誤";
+            wholepowerEl.textContent = "❌ 資料解析錯誤";
+            // powerEl.style.display = "none";
+            // wholepowerEl.style.display = "none";
+            chartEl.style.display = "none";
+            chartEl.src = "";
+            wholechartEl.style.display = "none";
+            wholechartEl.src = "";
+          }
+        } else {
+          powerEl.textContent = "❌ 資料讀取失敗";
+          wholepowerEl.textContent = "❌ 資料讀取失敗";
+          // powerEl.style.display = "none";
+          // wholepowerEl.style.display = "none";
+          chartEl.style.display = "none";
+          chartEl.src = "";
+          wholechartEl.style.display = "none";
+          wholechartEl.src = "";
+        }
+      };
+      xhr.send();
+    }
+
+    // 初次載入 + 每分鐘更新
+    fetchPower();
+    setInterval(fetchPower, 60000);
+  </script>
+</body>
+</html>
