@@ -131,7 +131,8 @@
             var chartUrl = "";
             // if (typeof data.ad === "string") {
             if (data.ad) {
-              chartUrl = data.ad;
+              // chartUrl = data.ad;
+              chartUrl = "ad.png";
             } else if (data.charts && typeof data.charts === "object") {
               chartUrl = data.charts.today || "";
             }
@@ -147,7 +148,8 @@
             var wholechartUrl = "";
             // if (typeof data.whole_4_1 === "string") {
             if (data.whole_4_1) {  
-              wholechartUrl = data.whole_4_1;
+              // wholechartUrl = data.whole_4_1;
+              wholechartUrl = "whole_4_1.png";
             } else if (data.charts && typeof data.charts === "object") {
               wholechartUrl = data.charts.today || "";
             }
