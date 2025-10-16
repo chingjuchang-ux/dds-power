@@ -124,6 +124,11 @@
 
             // 人言大樓即時用電圖表
             var chartUrl = "";
+            if (data.ad) {  
+              chartUrl = data.ad;
+            } else if (data.charts && typeof data.charts === "object") {
+              chartUrl = data.charts.today || "";
+            }
             if (chartUrl) {
               chartEl.style.display = "";
               chartEl.src = chartUrl + "?_=" + Date.now();
