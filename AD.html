@@ -61,16 +61,10 @@
       max-width: 100%;
       max-height: 100%;
       /* border: 2px solid #222; */
-      /* border-radius: 6px; */
+      /* border-radius: 6px;     每個角都會有半徑6像素的圓弧    */
       display: block;
       object-fit: contain;
     }
-
-    /* 響應式（如需才開） */
-    /* @media (max-width: 600px) {
-      .container { flex-direction: column; }
-      #adpower, #wholepower { font-size: 3em; }
-    } */
   </style>
 </head>
 <body>
@@ -92,8 +86,7 @@
   <script>
     function fetchPower() {
       var xhr = new XMLHttpRequest();
-      xhr.open("GET", "https://chingjuchang-ux.github.io/dds-power/data.json?_=" + Date.now(), true); // 加亂數避免快取
-      // xhr.open("GET", "https://esg.fcu.edu.tw/power-data-static/data.json?_=" + Date.now(), true); // 加亂數避免快取
+      xhr.open("GET", "https://esg.fcu.edu.tw/power-data-static/data.json?_=" + Date.now(), true); // 加亂數避免快取
       xhr.onreadystatechange = function() {
         if (xhr.readyState !== 4) return;
 
@@ -130,8 +123,7 @@
             }
 
             // 人言大樓即時用電圖表
-            // var chartUrl = "";
-            var chartUrl = "ad.png";
+            var chartUrl = "";
             if (chartUrl) {
               chartEl.style.display = "";
               chartEl.src = chartUrl + "?_=" + Date.now();
@@ -141,12 +133,10 @@
             }
 
             // 全校即時用電圖表
-            // var wholechartUrl = "";
-            var wholechartUrl = "whole_4_1.png";
+            var wholechartUrl = "";
             // if (typeof data.whole_4_1 === "string") {
             if (data.whole_4_1) {  
-              // wholechartUrl = data.whole_4_1;
-              wholechartUrl = "whole_4_1.png";
+              wholechartUrl = data.whole_4_1;
             } else if (data.charts && typeof data.charts === "object") {
               wholechartUrl = data.charts.today || "";
             }
