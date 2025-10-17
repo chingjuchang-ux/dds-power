@@ -123,12 +123,7 @@
             }
 
             // 人言大樓即時用電圖表
-            var chartUrl = "";
-            if (data.ad) {  
-              chartUrl = data.ad;
-            } else if (data.charts && typeof data.charts === "object") {
-              chartUrl = data.charts.today || "";
-            }
+            var chartUrl = "ad.png";
             if (chartUrl) {
               chartEl.style.display = "";
               chartEl.src = chartUrl + "?_=" + Date.now();
@@ -138,13 +133,7 @@
             }
 
             // 全校即時用電圖表
-            var wholechartUrl = "";
-            // if (typeof data.whole_4_1 === "string") {
-            if (data.whole_4_1) {  
-              wholechartUrl = data.whole_4_1;
-            } else if (data.charts && typeof data.charts === "object") {
-              wholechartUrl = data.charts.today || "";
-            }
+            var wholechartUrl = "whole_4_1.png";
             if (wholechartUrl) {
               wholechartEl.style.display = "";
               wholechartEl.src = wholechartUrl + "?_=" + Date.now();
