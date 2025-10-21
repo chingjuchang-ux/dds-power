@@ -92,7 +92,7 @@
         var wholechartEl = document.getElementById("wholechart");
 
         // 防呆：若任一目標元素不存在就不處理
-        if (!powerEl || !chartEl || !wholepowerEl || !wholechartEl) return;
+        if (!wholepowerEl || !wholechartEl) return;
 
         if (xhr.status === 200) {
           try {
