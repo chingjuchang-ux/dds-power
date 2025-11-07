@@ -104,7 +104,7 @@
             var data = JSON.parse(xhr.responseText);
 
             // 人言大樓即時用電
-            if (data.ad_kw_sum != null) {
+            if (data.ad_kw_sum != null && data.ad_kw_sum !== "") {
               powerEl.textContent = "人言大樓即時用電 - " + Number(data.ad_kw_sum).toLocaleString() + " kW";
               powerEl.style.color = "#000";
             } else {
