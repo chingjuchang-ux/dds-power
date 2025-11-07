@@ -103,22 +103,22 @@
             var data = JSON.parse(xhr.responseText);
 
             // 商學大樓即時用電
-            if (data.ah_kw_sum != null) {
+            if (data.ah_kw_sum != null && data.ah_kw_sum !== "") {
               powerEl.textContent = "商學大樓即時用電 - " + Number(data.ah_kw_sum).toLocaleString() + " kW";
               powerEl.style.color = "#000";
             } else {
-              powerEl.textContent = "無用電資料";
-              // powertEl.style.display = "none";
+              // powerEl.textContent = "無用電資料";
+              powertEl.style.display = "none";
               powerEl.style.color = "#00ffcc";
             }
 
             // 全校即時用電
-            if (data.whole_kw_sum != null) {
+            if (data.whole_kw_sum != null && data.whole_kw_sum !== "") {
               wholepowerEl.textContent = "全校即時用電 - " + Number(data.whole_kw_sum).toLocaleString() + " kW";
               wholepowerEl.style.color = "#000";
             } else {
-              wholepowerEl.textContent = "無用電資料";
-              // wholepowerEl.style.display = "none";
+              // wholepowerEl.textContent = "無用電資料";
+              wholepowerEl.style.display = "none";
               wholepowerEl.style.color = "#00ffcc";
             }
 
@@ -149,20 +149,20 @@
             }
 
           } catch (e) {
-            powerEl.textContent = "❌ 資料解析錯誤";
-            wholepowerEl.textContent = "❌ 資料解析錯誤";
-            // powerEl.style.display = "none";
-            // wholepowerEl.style.display = "none";
+            // powerEl.textContent = "❌ 資料解析錯誤";
+            // wholepowerEl.textContent = "❌ 資料解析錯誤";
+            powerEl.style.display = "none";
+            wholepowerEl.style.display = "none";
             chartEl.style.display = "none";
             chartEl.src = "";
             wholechartEl.style.display = "none";
             wholechartEl.src = "";
           }
         } else {
-          powerEl.textContent = "❌ 資料讀取失敗";
-          wholepowerEl.textContent = "❌ 資料讀取失敗";
-          // powerEl.style.display = "none";
-          // wholepowerEl.style.display = "none";
+          // powerEl.textContent = "❌ 資料讀取失敗";
+          // wholepowerEl.textContent = "❌ 資料讀取失敗";
+          powerEl.style.display = "none";
+          wholepowerEl.style.display = "none";
           chartEl.style.display = "none";
           chartEl.src = "";
           wholechartEl.style.display = "none";
