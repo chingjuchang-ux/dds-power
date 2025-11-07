@@ -99,12 +99,12 @@
             var data = JSON.parse(xhr.responseText);
 
             // 全校即時用電
-            if (data.whole_kw_sum != null && data.whole_kwh != null) {
+            if (data.whole_kw_sum != null && data.whole_kwh != null && data.whole_kw_sum !== "" && data.whole_kwh !== "") {
               wholepowerEl.textContent = "全校即時用電 - " + Number(data.whole_kw_sum).toLocaleString() + " kW" + " 全校累計用電度數 - " + Number(data.whole_kwh).toLocaleString() + " kWh" ;
               wholepowerEl.style.color = "#000";
             } else {
-              wholepowerEl.textContent = "無用電資料";
-              // wholepowerEl.style.display = "none";
+              // wholepowerEl.textContent = "無用電資料";
+              wholepowerEl.style.display = "none";
               wholepowerEl.style.color = "#00ffcc";
             }
 
@@ -122,22 +122,22 @@
             }
 
           } catch (e) {
-            powerEl.textContent = "❌ 資料解析錯誤";
-            wholepowerEl.textContent = "❌ 資料解析錯誤";
-            // powerEl.style.display = "none";
-            // wholepowerEl.style.display = "none";
-            chartEl.style.display = "none";
-            chartEl.src = "";
+            // powerEl.textContent = "❌ 資料解析錯誤";
+            // wholepowerEl.textContent = "❌ 資料解析錯誤";
+            powerEl.style.display = "none";
+            wholepowerEl.style.display = "none";
+            // chartEl.style.display = "none";
+            // chartEl.src = "";
             wholechartEl.style.display = "none";
             wholechartEl.src = "";
           }
         } else {
-          powerEl.textContent = "❌ 資料讀取失敗";
-          wholepowerEl.textContent = "❌ 資料讀取失敗";
-          // powerEl.style.display = "none";
-          // wholepowerEl.style.display = "none";
-          chartEl.style.display = "none";
-          chartEl.src = "";
+          // powerEl.textContent = "❌ 資料讀取失敗";
+          // wholepowerEl.textContent = "❌ 資料讀取失敗";
+          powerEl.style.display = "none";
+          wholepowerEl.style.display = "none";
+          // chartEl.style.display = "none";
+          // chartEl.src = "";
           wholechartEl.style.display = "none";
           wholechartEl.src = "";
         }
